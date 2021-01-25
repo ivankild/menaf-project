@@ -14,19 +14,36 @@ export class Api<T> {
 
   async get(id: number): Promise<T> {
     const response = await fetch(this.url + '/' + id);
-    await sleep(500);
+    await asyncDebug();
     const json = (await response.json()) as Partial<T>;
     return new this.type(json);
   }
 
   async getAll(): Promise<T[]> {
     const response = await fetch(this.url);
-    await sleep(2000);
+    await asyncDebug();
     const json = (await response.json()) as Partial<T>[];
     return json.map(i => new this.type(i));
   }
 }
 
+export const asyncDebug = async () => {
+  await sleep(500);
+  await randomError(0.3);
+}
+
 export const sleep = (ms: number):Promise<null> => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+export const randomError = (posobility: number):Promise<null> => {
+  return new Promise( (resolve, reject) => {
+    if (Math.random() > posobility) {
+      resolve(null);
+    } else {
+      reject('Loading Error');
+    }
+  });
+}
+
+

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Container } from 'react-bootstrap';
 import AsyncLoader from '../components/AsyncLoader';
 import UserItem from '../components/UserItem';
@@ -6,25 +6,15 @@ import { User } from '../models/User';
 import { Api } from '../utils/Api';
 
 const Users = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    (async () => {
-      const usersApi = new Api<User>(User, 'users');
-      const result = await usersApi.getAll();
-      setUsers(result);
-      setIsLoading(false);
-    })();
-  });
-
+  const usersApi = new Api<User>(User, 'users')
   return <Container>
     <h1>Users</h1>
-    <AsyncLoader isLoading={isLoading}>
-      <ul>
+    <AsyncLoader
+      loader={async () => await usersApi.getAll()}
+      render={(users: User[]) => <ul>
         {users.map(item => <UserItem user={item} key={item.id}/>)}
-      </ul>
-    </AsyncLoader>
+      </ul>}
+    />
   </Container>
 }
 
