@@ -14,6 +14,7 @@ export class Api<T> {
 
   async get(id: number): Promise<T> {
     const response = await fetch(this.url + '/' + id);
+    await sleep(500);
     const json = (await response.json()) as Partial<T>;
     return new this.type(json);
   }

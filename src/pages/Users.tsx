@@ -8,15 +8,15 @@ import { Api } from '../utils/Api';
 const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const usersApi = new Api<User>(User, 'users');
 
   useEffect(() => {
     (async () => {
+      const usersApi = new Api<User>(User, 'users');
       const result = await usersApi.getAll();
       setUsers(result);
       setIsLoading(false);
     })();
-  }, []);
+  });
 
   return <Container>
     <h1>Users</h1>
